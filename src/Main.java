@@ -8,10 +8,8 @@ public class Main {
 
         try {
             checkData("login", "password", "password");
-        } catch (WrongLoginException e) {
-            System.out.println("Используются запрещенные символы или превышена разрешенная длина параметра login (20 символов)");
-        } catch (WrongPasswordException e) {
-            System.out.println("Пароли не совпадают или используются запрещенные символы или превышена разрешенная длина параметра password (20 символов)");
+        } catch (WrongLoginException | WrongPasswordException e) {
+            System.out.println(e.getMessage());
         } catch (NullPointerException e) {
             System.out.println("Не заполнено какое-то из полей");
         }
@@ -23,7 +21,7 @@ public class Main {
         check(password, 1);
 
         if (!(password.equals(confirmPassword))) {
-            throw new WrongPasswordException();
+            throw new WrongPasswordException("Пароли не совпадают");
         }
     }
 
@@ -31,9 +29,9 @@ public class Main {
         String checkStringLowerCase = checkString.toLowerCase();
         int threshold = 20;
         if (checkString.length() >= threshold && loginOrPassword == 0) {
-            throw new WrongLoginException();
+            throw new WrongLoginException("Превышена разрешенная длина параметра login (20 символов)");
         } else if (checkString.length() >= threshold && loginOrPassword == 1) {
-            throw new WrongPasswordException();
+            throw new WrongPasswordException("Превышена разрешенная длина параметра password (20 символов)");
         }
         int flag;
         for (int i = 0; i < checkStringLowerCase.length(); i++) {
@@ -44,9 +42,9 @@ public class Main {
                 }
             }
             if (flag == 0 && loginOrPassword == 0) {
-                throw new WrongLoginException();
+                throw new WrongLoginException("В параметре login используются запрещенные символы");
             } else if (flag == 0 && loginOrPassword == 1) {
-                throw new WrongPasswordException();
+                throw new WrongPasswordException("В параметре password используются запрещенные символы");
             }
         }
     }
